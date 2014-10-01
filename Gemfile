@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+ruby '2.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
@@ -41,3 +41,7 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem 'api-auth', :git => 'https://github.com/karl-petter/api_auth.git', :branch => 'fix_calculated_md5_in_action_controller'
+
+gem 'unicorn', group: :production
+ 
+gem 'rails_12factor', group: :production
