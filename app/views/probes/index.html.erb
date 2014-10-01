@@ -1,0 +1,27 @@
+<h1>Listing probes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Secret</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @probes.each do |probe| %>
+      <tr>
+        <td><%= probe.name %></td>
+        <td><%= probe.secret %></td>
+        <td><%= link_to 'Show', probe %></td>
+        <td><%= link_to 'Edit', edit_probe_path(probe) %></td>
+        <td><%= link_to 'Destroy', probe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Probe', new_probe_path %>
