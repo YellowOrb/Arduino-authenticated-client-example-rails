@@ -16,7 +16,7 @@ Lets start with the Rails application. [API_AUTH](http://github.com/mgomes/api_a
 
 Create a new Rails project:
 ```
-rail new ArduinoAuthenticatedClientExample
+rails new ArduinoAuthenticatedClientExample
 ```
 
 Then using you favourite text editor add API_AUTH to the `Gemfile`:
@@ -36,11 +36,11 @@ rails generate scaffold Measure temperature:float
 ```
 
 We need to setup the relationships between these models, a probe has many measures and measures belongs to probes. In `app/models/probe.rb` add:
-```
+```ruby
 has_many :measures
 ```
 and in `app/models/measure.rb` add:
-```
+```ruby
 belongs_to:probe
 ```
 
@@ -55,7 +55,7 @@ rake db:migrate
 ```
 
 Add the following code to `app/controllers/measures_controller.rb` so that all REST calls that modify the model needs to be authenticated using HMAC:
-```
+```ruby
 # require any kind of change and creation of a measure to come through our authenticated api using HMAC 
 # and we skip the CSRF check for these requests
 before_action :require_authenticated_api, only: [:edit, :update, :destroy, :create]
@@ -74,35 +74,35 @@ end
 ```
 
 We added a flash error message in the code above so we need to add support in `app/views/layouts/application.html.erb` to get that presented:
-```
+```ruby
 <% flash.each do |name, msg| -%>
   <%= content_tag :div, msg, class: name %>
 <% end -%>
 ```
 
 We want the secret keys generated automatically rather then entered by the user. So in `app/controllers/probes_controller.rb`, in the create method change so the first lines looks like this:
-```
+```ruby
 @probe = Probe.new(probe_params)
 @probe.secret = ApiAuth.generate_secret_key
 ```
 
 And we want to remove the input field. Change in `app/views/probes/_form.html.erb` so
-```
+```ruby
 <%= f.text_field :secret %>
 ```
 becomes
-```
+```ruby
 <%= @probe.secret %>
 ```
 
 Now we are almost done but we want to add some more security. We do not want anyone be able to change the secret keys and actually we would like to add user authentication so that like an admin is the only one who ca see the secrets but that is not a task for this tutorial. If you need that see for example the [Devise getting started guide](https://github.com/plataformatec/devise#getting-started). Add the following to app/models/probe.rb so that the secret only can be read and not modified:
-```
+```ruby
 attr_readonly :secret
 ```
 
 Now you can run the server and start creating probes. Do
 ```
-> rails server
+rails server
 ```
 and create a probe or two by going to [http://localhost:3000/probes/](http://localhost:3000/probes/).
 
